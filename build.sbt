@@ -24,6 +24,7 @@ addCommandAlias("fix", "; all compile:scalafix test:scalafix; all scalafmtSbt sc
 addCommandAlias("check", "; scalafmtSbtCheck; scalafmtCheckAll; compile:scalafix --check; test:scalafix --check")
 
 val zioVersion = "1.0.3"
+val zioSchemaVersion = "95b78712864e33bd2d93f6af0c5371c720078452"
 
 lazy val root = project
   .in(file("."))
@@ -31,11 +32,13 @@ lazy val root = project
     skip in publish := true,
     unusedCompileDependenciesFilter -= moduleFilter("org.scala-js", "scalajs-library")
   )
+  .dependsOn(zioSchema)
   .aggregate(
     zioFlowJVM,
     zioFlowJS
   )
 
+lazy val zioSchema = RootProject(uri(s"git://github.com/zio/zio-schema.git#95b78712864e33bd2d93f6af0c5371c720078452")) 
 lazy val zioFlow = crossProject(JSPlatform, JVMPlatform)
   .in(file("zio-flow"))
   .settings(stdSettings("zio-flow"))

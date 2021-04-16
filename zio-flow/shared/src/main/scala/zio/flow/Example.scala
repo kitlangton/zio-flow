@@ -1,5 +1,7 @@
 package zio.flow
 
+import zio.schema.Schema
+
 object Example {
   // Remote[A] => Remote[(B, A)]
 

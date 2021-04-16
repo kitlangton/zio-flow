@@ -1,4 +1,5 @@
 package zio.flow
+import zio.schema.Schema
 
 sealed trait Numeric[A] {
   def schema: Schema[A]

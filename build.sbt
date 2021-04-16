@@ -1,4 +1,5 @@
 import BuildHelper._
+import sbt.Keys.libraryDependencies
 
 inThisBuild(
   List(
@@ -26,6 +27,7 @@ addCommandAlias("fmtCheck", "all scalafmtSbtCheck scalafmtCheckAll")
 addCommandAlias("fixCheck", "scalafixAll --check")
 
 val zioVersion = "1.0.4-2"
+val zioSchemaVersion = "0.0.4"
 
 lazy val root = project
   .in(file("."))
@@ -57,6 +59,11 @@ lazy val zioFlowJS = zioFlow.js
 
 lazy val zioFlowJVM = zioFlow.jvm
   .settings(dottySettings)
+  .settings(
+      libraryDependencies ++= Seq(
+      "dev.zio" %% "zio-schema"   % zioSchemaVersion
+    )
+  )
 
 lazy val docs = project
   .in(file("zio-flow-docs"))

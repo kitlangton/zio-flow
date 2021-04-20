@@ -1,30 +1,34 @@
 package zio
 
-import zio.schema.Schema
-
 import java.time._
 import java.time.temporal.ChronoUnit
+
 import scala.language.implicitConversions
+
+import zio.schema.Schema
 
 package object flow {
   type ActivityError
-  type Variable[A]
+  type Variable[A] = zio.flow.Remote.Variable[A]
 
   type RemoteDuration    = Remote[Duration]
   type RemoteInstant     = Remote[Instant]
   type RemoteVariable[A] = Remote[Variable[A]]
 
-  implicit val schemaChronoUnit: Schema[ChronoUnit] = Schema[String].transformOrFail({
-    case "SECONDS" => Right(ChronoUnit.SECONDS)
-    case _ => Left("Failed")
-  }, {
-    //TODO : Add the rest
-    case ChronoUnit.SECONDS => Right("SECONDS")
-    case _ => Left("Failed")
-  })
+  implicit val schemaChronoUnit: Schema[ChronoUnit] = Schema[String].transformOrFail(
+    {
+      case "SECONDS" => Right(ChronoUnit.SECONDS)
+      case _         => Left("Failed")
+    },
+    {
+      //TODO : Add the rest
+      case ChronoUnit.SECONDS => Right("SECONDS")
+      case _                  => Left("Failed")
+    }
+  )
 
-  implicit val schemaNil: Schema[Nil.type]                                         = Schema[Unit].transform(_ => Nil, _ => ())
-  implicit def schemaLeft[A,B](implicit schema: Schema[A]): Schema[Left[A,B]] =
+  implicit val schemaNil: Schema[Nil.type]                                      = Schema[Unit].transform(_ => Nil, _ => ())
+  implicit def schemaLeft[A, B](implicit schema: Schema[A]): Schema[Left[A, B]] =
     schema.transform(a => Left(a), leftA => leftA.value)
 
   implicit def schemaRight[A, B](implicit schema: Schema[A]): Schema[Right[B, A]] =

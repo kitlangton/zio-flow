@@ -26,7 +26,7 @@ addCommandAlias("fix", "scalafixAll")
 addCommandAlias("fmtCheck", "all scalafmtSbtCheck scalafmtCheckAll")
 addCommandAlias("fixCheck", "scalafixAll --check")
 
-val zioVersion = "1.0.4-2"
+val zioVersion       = "1.0.4-2"
 val zioSchemaVersion = "0.0.4"
 
 lazy val root = project
@@ -49,7 +49,8 @@ lazy val zioFlow = crossProject(JSPlatform, JVMPlatform)
     libraryDependencies ++= Seq(
       "dev.zio" %% "zio"          % zioVersion,
       "dev.zio" %% "zio-test"     % zioVersion % "test",
-      "dev.zio" %% "zio-test-sbt" % zioVersion % "test"
+      "dev.zio" %% "zio-test-sbt" % zioVersion % "test",
+      "dev.zio" %% "zio-schema"   % zioSchemaVersion
     )
   )
   .settings(testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework"))
@@ -60,8 +61,8 @@ lazy val zioFlowJS = zioFlow.js
 lazy val zioFlowJVM = zioFlow.jvm
   .settings(dottySettings)
   .settings(
-      libraryDependencies ++= Seq(
-      "dev.zio" %% "zio-schema"   % zioSchemaVersion
+    libraryDependencies ++= Seq(
+      "dev.zio" %% "zio-schema" % zioSchemaVersion
     )
   )
 

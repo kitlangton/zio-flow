@@ -1,7 +1,5 @@
 package zio.flow
 
-import zio.flow.Remote.apply
-
 trait RemoteEither[+A] {
   def self: Remote[A]
 

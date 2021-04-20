@@ -1,10 +1,11 @@
 package zio.flow
 
-import java.time.temporal.{ ChronoUnit, TemporalUnit }
-import java.time.{ Duration, Instant, Period }
-import zio.schema.Schema
+import java.time.temporal.TemporalUnit
+import java.time.{ Duration, Instant }
 
 import scala.language.implicitConversions
+
+import zio.schema.Schema
 
 /**
  * A `Remote[A]` is a blueprint for constructing a value of type `A` on a
@@ -49,6 +50,9 @@ sealed trait Remote[+A]
 }
 
 object Remote {
+
+  implicit def apply[A: Schema](value: A): Remote[A] =
+    Literal(value, Schema[A])
 
   final case class Literal[A](value: A, schema: Schema[A]) extends Remote[A] {
     def evalWithSchema: Either[Remote[A], (Schema[A], A)] =
@@ -368,8 +372,8 @@ object Remote {
     }
   }
 
-  implicit def apply[A: Schema](value: A): Remote[A] =
-    Literal(value, Schema[A])
+//  implicit def apply[A: Schema](value: A): Remote[A] =
+//    Literal(value, Schema[A])
 
   def checkEquality[A](self: Remote[A], that: Remote[Any]): Boolean = {
     var counter: Int = 0

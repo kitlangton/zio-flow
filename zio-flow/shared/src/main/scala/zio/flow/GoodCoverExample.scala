@@ -1,6 +1,7 @@
 package zio.flow
 
 import java.time.Period
+
 import zio.schema.Schema
 
 /**
@@ -197,9 +198,7 @@ object PolicyRenewalExample {
           _               <- ZFlow.when(isManualEvalReq)(manualEvalReminderFlow(policy, manualEvalDone))
           policyOption    <- createRenewedPolicy(claimStatus, fireRisk)
           _               <- policyOption.handleOption(ZFlow.unit, (p: Remote[Policy]) => policyRenewalReminderFlow(p, renewPolicy))
-          renew           <- renewPolicy.get
-          _               <- renew.handleOption(ZFlow.unit, (r: Remote[Boolean]) => r.ifThenElse(paymentFlow, ZFlow.unit))
-        } yield ()
+        } yield Remote(())
 
       for {
         policies <- getPoliciesAboutToExpire(Remote(Period.ofDays(60)))

@@ -1,6 +1,6 @@
 package zio.flow
 
-import zio.flow.Remote.{ Cons, apply }
+import zio.flow.Remote._
 
 trait RemoteList[+A] {
   def self: Remote[A]
